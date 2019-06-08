@@ -22,6 +22,8 @@ def sigmoid_der(x):
 
 m = x.shape[0] #Number of training examples
 
+l = 1 #Number of hidden layers
+
 features = x.shape[1] #Number of features
 
 hidden_nodes = 5  #Number of nodes in hidden layer
