@@ -48,40 +48,39 @@ for epoch in range(10000):
     zo = np.dot(ah, wo) + bo
     y_pred = sigmoid(zo)
 
-
-    #Back Propogation
-
-    dcost_dzo = y_pred - y
-    dzo_dwo = ah
-
-    dcost_wo = np.dot(dzo_dwo.T, dcost_dzo)
-
-    dcost_bo = dcost_dzo
-
-
-
-    dzo_dah = wo
-    dcost_dah = np.dot(dcost_dzo , dzo_dah.T)
-    dah_dzh = sigmoid_der(zh)
-    dzh_dwh = x
-    dcost_wh = np.dot(dzh_dwh.T, dah_dzh * dcost_dah)
-
-    dcost_bh = dcost_dah * dah_dzh
-
-    # Updating Weights
-
-    wh -= lr * dcost_wh
-    bh -= lr * dcost_bh.sum()
-
-    wo -= lr * dcost_wo
-    bo -= lr * dcost_bo.sum()
-
     # Displaying the result after every 200 epochs
     
     if (epoch+1) % 200 == 0:
         # Calculating the cost a every epoch 
-        loss = np.sum(-y * np.log(y_pred))
-        print("Epoch", (epoch + 1), ": cost =", loss ) 
+        cost = (1/m) * np.sum(-y * np.log(y_pred) - (1 - y) * np.log(1 - y_pred))
+        print("Epoch", (epoch + 1), ": cost =", cost) 
+    #Back Propogation
+
+    dcost_dzo = y_pred - y
+
+    dcost_wo = (1/m)*np.dot(ah.T, dcost_dzo)
+
+    dcost_bo = (1/m)*np.sum(dcost_dzo)
+
+    dcost_dah = np.dot(dcost_dzo , wo.T)
+    
+    dah_dzh = sigmoid_der(zh)
+
+    dcost_dzh = dah_dzh * dcost_dah
+
+    dcost_wh = (1/m)*np.dot(x.T, dcost_dzh)
+
+    dcost_bh = (1/m)*np.sum(dcost_dzh)
+
+    # Updating Weights
+
+    wh -= lr * dcost_wh
+    bh -= lr * dcost_bh
+
+    wo -= lr * dcost_wo
+    bo -= lr * dcost_bo
+
+    
         
 
 # Calculating the predictions 
@@ -89,4 +88,3 @@ zo = np.dot(ah, wo) + bo
 y_pred = sigmoid(zo)
 
 print("Output = " ,y_pred)
-
